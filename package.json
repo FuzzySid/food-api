@@ -1,0 +1,14 @@
+{
+  "name": "fuzzy-food",
+  "version": "1.0.0",
+  "description": "A restful api built on nodejs for ordering food",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "fuzzySid",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
