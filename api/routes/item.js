@@ -28,9 +28,23 @@ router.get('/:itemId',(req,res,nxt)=>{
     }
     else{
         res.status(200).json({
-            message:
+            message:"You passed an Id"
         })
     }
 })
 
+
+
+router.patch('/:itemId',(req,res,nxt)=>{
+    res.status(200).json({
+        message:"Item updated!"
+    })
+
+})
+
+router.delete('/:itemId',(req,res,nxt)=>{
+    res.status(200).json({
+        message: 'Deleted item'
+    })
+})
 module.exports=router;
