@@ -10,8 +10,13 @@ router.get('/',(req,res,nxt)=>{
 })
 
 router.post('/',(req,res,nxt)=>{
-    res.status(200).json({
-        message: "Added a new order"
+    const order={
+        itemId: req.body.itemId,
+        quantity: req.body.quantity
+    }
+    res.status(201).json({
+        message: "Added a new order",
+        order: order
     })
 })
 

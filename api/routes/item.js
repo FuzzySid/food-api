@@ -12,8 +12,13 @@ router.get('/',(req,res,nxt)=>{
 
 //handle incoming post requests
 router.post('/',(req,res,nxt)=>{
-    res.status(200).json({
-        message: "Handline POST requests to /items"
+    const item={
+        name: req.body.name,
+        price: req.body.price
+    };
+    res.status(201).json({
+        message: "Handline POST requests to /items",
+        createdItem: item
     })
 });
 
