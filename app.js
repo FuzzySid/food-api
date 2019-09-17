@@ -1,5 +1,6 @@
 const express=require('express');
 const app=express();
+const mongoose=require('mongoose');
 
 //Middleware for parsing incoming requests body
 const bodyParser=require('body-parser');
@@ -9,6 +10,25 @@ const morgan=require('morgan');
 
 const orderRoutes=require('./api/routes/orders');
 const itemRoutes=require('./api/routes/item');
+
+//connecting to database 
+// mongoose.connect('mongodb+srv:fuzzy_sid:'+process.env.MONGO_ATLAS_PWD+'@fuzzy-rest-food-h67r3.mongodb.net/test?retryWrites=true&w=majority',{
+//     // useMongoClient:true,
+//     useNewUrlParser: true 
+// });
+// mongoose.Promise=Promise;
+// const MongoClient = require('mongodb').MongoClient;
+// const uri = "mongodb+srv://fuzzy_sid:PYZBaBSeAJr2wKkz@fuzzy-rest-food-h67r3.mongodb.net/test?retryWrites=true&w=majority";
+// const client = new MongoClient(uri, { useNewUrlParser: true });
+// client.connect(err => {
+//   const collection = client.db("test").collection("devices");
+//   // perform actions on the collection object
+//   client.close();
+// });
+mongoose.set('debug',true);
+mongoose.connect('mongodb://localhost/food-db');
+mongoose.Promise=Promise;
+
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended:false}))
