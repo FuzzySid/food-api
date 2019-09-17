@@ -11,10 +11,26 @@ const mongoose=require('mongoose');
 //handle incoming get requests
 router.get('/',(req,res,nxt)=>{
    Item.find()
+   //filtering the data you want to fetch
+   .select('name price _id')
    .exec()
    .then(data=>{
-       console.log(data);
-       res.status(200).json(data)
+       const response={
+           count: data.length,
+           items: data.map(d=>{
+               return {
+                   name: d.name,
+                   price: d.price,
+                   _id: d._id,
+                   request:{
+                       type: 'GET',
+                       url: 'https://localhost:3000/items/'+d._id
+                   }
+               }
+           })
+       }
+       //console.log(data);
+       res.status(200).json(response)
    })
    .catch(err=>{
        console.log(err);
@@ -34,11 +50,19 @@ router.post('/',(req,res,nxt)=>{
     });
     item
     .save()
-    .then(res=>{
-        console.log(res);
+    .then(result=>{
+        console.log(result);
         res.status(201).json({
-            message: "Handling POST requests to /items",
-            createdItem: item
+            message: "Created a new Item!",
+            createdItem: {
+                name: result.name,
+                price: result.price,
+                _id: result._id,
+                request: {
+                    type: 'GET',
+                    url: 'https://localhost:3000'+result._id
+                }
+            }
         })
     })
     .catch(err=>{
@@ -54,13 +78,20 @@ router.get('/:itemId',(req,res,nxt)=>{
     const id=req.params.itemId;
     //console.log(1);
    Item.findById(id)
-
+   .select('name price _id')
    .exec()
    .then(data=>{
        //console.log(2);
        console.log(data);
        if(data)
-       res.status(200).json(data);
+       res.status(200).json({
+           item: data,
+           request:{
+               type: 'GET',
+               description: 'GET all items',
+               url: 'http://localhost:3000/items'
+           }
+       });
        else
        res.status(404).json({
            message:'Invalid'
@@ -88,7 +119,13 @@ router.patch('/:itemId',(req,res,nxt)=>{
     .exec()
     .then(resut=>{
         console.log(result);
-        res.status(200).json(result);
+        res.status(200).json({
+            messgae: 'Item updated',
+            request: {
+                type: 'GET',
+                url: 'http://localhost/items/'+ id
+            }
+        });
     })
     .catch(err=>{
         console.log(err);

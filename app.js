@@ -14,7 +14,7 @@ const itemRoutes=require('./api/routes/item');
 //connecting to database 
 mongoose.set('debug',true);
 mongoose.connect('mongodb://localhost/food-db');
-mongoose.Promise=Promise;
+mongoose.Promise=global.Promise;
 
 
 app.use(morgan('dev'));
