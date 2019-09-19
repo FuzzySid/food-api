@@ -9,6 +9,9 @@ const itemSchema=mongoose.Schema({
     price: {
         type: Number,
         required: true
+    },
+    itemImage:{
+        type: String
     }
 })
 

@@ -3,6 +3,36 @@ const express=require('express');
 const router=express.Router();
 //register different routes using the router
 
+//Alternate to body parser for parsing raw bodies or bodies that body parser cannot parse
+const multer=require('multer');
+const storage=multer.diskStorage({
+    destination:function(req,file,cb){
+        cb(null,'./uploads/');
+    },
+    filename:function(req,file,cb){
+        cb(null,new Date().toISOString().replace(/:/g, '-')+file.originalname)
+    }
+})
+
+// const fileFilter=(req,file,cb)=>{
+//     //reject a file
+//     if(file.mimetype==='image/jpeg'||file.mimetype==='image/png')
+//     cb(null,false);
+//     else
+//     cb(null,true);
+// }
+
+//executing multer and specifying the directory where multer will store files
+const upload=multer(
+    // {dest:'uploads/'})
+    {storage:storage
+    //     ,
+    // limits:{
+    // fileSize: 1024*1024*5
+    // },
+    // fileFilter:fileFilter
+})
+
 //import the models and schema of item
 const Item=require('../models/item');
 
@@ -12,7 +42,7 @@ const mongoose=require('mongoose');
 router.get('/',(req,res,nxt)=>{
    Item.find()
    //filtering the data you want to fetch
-   .select('name price _id')
+   .select('name price _id itemImage')
    .exec()
    .then(data=>{
        const response={
@@ -21,6 +51,7 @@ router.get('/',(req,res,nxt)=>{
                return {
                    name: d.name,
                    price: d.price,
+                   itemImage:d.itemImage,
                    _id: d._id,
                    request:{
                        type: 'GET',
@@ -41,12 +72,13 @@ router.get('/',(req,res,nxt)=>{
 });
 
 //handle incoming post requests
-router.post('/',(req,res,nxt)=>{
-   
+router.post('/',upload.single('itemImage'),(req,res,nxt)=>{
+   console.log(req.file);
     const item=new Item({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        price:req.body.price
+        price:req.body.price,
+        itemImage:req.file.path
     });
     item
     .save()
@@ -78,7 +110,7 @@ router.get('/:itemId',(req,res,nxt)=>{
     const id=req.params.itemId;
     //console.log(1);
    Item.findById(id)
-   .select('name price _id')
+   .select('name price _id itemImage')
    .exec()
    .then(data=>{
        //console.log(2);
