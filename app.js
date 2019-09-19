@@ -10,6 +10,7 @@ const morgan=require('morgan');
 
 const orderRoutes=require('./api/routes/orders');
 const itemRoutes=require('./api/routes/item');
+const userRoutes=require('./api/routes/user');
 
 //connecting to database 
 mongoose.set('debug',true);
@@ -38,6 +39,7 @@ app.use((req,res,nxt)=>{
 //Middleware for all incoming requests
 app.use('/items',itemRoutes);
 app.use('/orders',orderRoutes);
+app.use('/user',userRoutes);
 
 //handle every rewquest reaching this route and send error
 app.use((req,res,nxt)=>{
